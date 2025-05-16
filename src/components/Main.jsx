@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import bg from '../assets/1.webp';
 import Select from 'react-select';
 import money1 from '../assets/money1.png';
 import money2 from '../assets/money2.png';
 import money3 from '../assets/money3.png';
+import html2canvas from 'html2canvas';
 
 // Import Press Start 2P font
 const FontImport = styled.div`
@@ -38,14 +39,6 @@ const SupplyIcon = () => (
   </svg>
 );
 
-const WalletIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="3" y="4" width="10" height="8" fill="#3a3a3a" />
-    <rect x="4" y="5" width="8" height="6" fill="#00cc00" />
-    <rect x="10" y="6" width="2" height="4" fill="#3a3a3a" />
-  </svg>
-);
-
 // Styled Components
 const MainContainer = styled.div`
   height: 100vh;
@@ -56,7 +49,7 @@ const MainContainer = styled.div`
   background-attachment: fixed;
   background-size: cover;
   position: relative;
-  overflow-x: hidden;
+  overflow-y: auto;
 
   &:before {
     content: '';
@@ -77,11 +70,32 @@ const ContentWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 1rem;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+`;
+
+const TokenWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    align-items: center;
+  }
 `;
 
 const TokenDisplay = styled.div`
-  width: 24rem; /* Smaller width */
-  height: 18rem; /* Smaller height, 4:3 aspect ratio */
+  width: 24rem;
+  height: 18rem;
   background: ${({ platform }) =>
     platform === 'Ethereum' ? `url(${money1})` :
       platform === 'Binance' ? `url(${money2})` :
@@ -92,10 +106,14 @@ const TokenDisplay = styled.div`
   border: 3px solid #2a2a2a;
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.15);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
   position: relative;
-  animation: slideInLeft 1s ease-out, crtFlicker 0.3s 0.7s;
+  animation: crtFlicker 0.3s 0.7s;
+  font-family: 'Times New Roman', serif;
+  color: #2a2a2a;
+  text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.3);
 
   &:before {
     content: '';
@@ -108,62 +126,237 @@ const TokenDisplay = styled.div`
     pointer-events: none;
   }
 
-  @keyframes slideInLeft {
-    from { transform: translateX(-100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-
   @keyframes crtFlicker {
     0% { filter: brightness(1); }
     50% { filter: brightness(1.2); }
     100% { filter: brightness(1); }
   }
+
+  @media (max-width: 768px) {
+    width: 18rem;
+    height: 13.5rem;
+  }
 `;
 
-const TokenText = styled.div`
-  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+const TokenHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px dashed #2a2a2a;
+`;
+
+const TokenName = styled.div`
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  max-width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const TokenTicker = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.2rem 0.4rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+`;
+
+const TokenBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 0.5rem;
+  text-align: center;
+`;
+
+const TokenSupply = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+`;
+
+const TokenPlatform = styled.div`
   font-size: 0.9rem;
+  font-style: italic;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  padding: 0.2rem 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+`;
+
+const TokenFooter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px dashed #2a2a2a;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: #4a4a4a;
+
+  @media (max-width: 768px) {
+    font-size: 0.6rem;
+  }
+`;
+
+const TokenDescription = styled.div`
+  max-height: 2.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  @media (max-width: 768px) {
+    max-height: 2rem;
+  }
+`;
+
+const MicrotextBorder = styled.div`
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  right: 0.2rem;
+  bottom: 0.2rem;
+  border: 1px solid #2a2a2a;
+  font-size: 0.5rem;
+  color: #4a4a4a;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+
+  &:before, &:after {
+    content: 'PROFIT FORGE TOKEN';
+    padding: 0.1rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.4rem;
+  }
+`;
+
+const LoadingText = styled.div`
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
   color: #00cc00;
   text-shadow: 1px 1px 3px rgba(0, 255, 0, 0.2);
   text-align: center;
   padding: 0.8rem;
   background: rgba(0, 0, 0, 0.7);
   border: 2px dashed #2a2a2a;
-`;
-
-const LoadingText = styled(TokenText)`
+  max-width: 90%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  @media (max-width: 768px) {
+    font-size: 0.6rem;
+    padding: 0.6rem;
+  }
+`;
+
+const SaveButton = styled.button`
+  background: #2a2a2a;
+  color: ${({ saving }) => (saving ? '#1a1a1a' : '#00cc00')};
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  padding: 0.4rem 0.8rem;
+  border: 2px solid #00cc00;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 6px rgba(0, 255, 0, 0.2);
+  text-transform: uppercase;
+  width: 8rem;
+  text-align: center;
+
+  ${({ saving }) =>
+    saving &&
+    `
+    background: #00cc00;
+    animation: crtFlicker 0.3s ease;
+    text-shadow: 1px 1px 3px rgba(0, 255, 0, 0.5);
+    @keyframes crtFlicker {
+      0% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+      100% { filter: brightness(1); }
+    }
+  `}
+
+  &:hover {
+    background: #00cc00;
+    color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  @media (max-width: 768px) {
+    width: 6rem;
+    font-size: 0.6rem;
+    padding: 0.3rem 0.6rem;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
 `;
 
 const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.5s ease;
-  transform: ${({ showFundingForm }) => (showFundingForm ? 'translateX(100%)' : 'translateX(0)')};
-  animation: slideInRight 1s ease-out, crtFlicker 0.3s 0.7s;
-
-  @keyframes slideInRight {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
+  animation: crtFlicker 0.3s 0.7s;
 
   @keyframes crtFlicker {
     0% { filter: brightness(1); }
     50% { filter: brightness(1.2); }
     100% { filter: brightness(1); }
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const FormCard = styled.div`
-  background: rgba(120, 84, 43, 0);
+  background: rgba(120, 84, 43, 0.38);
   padding: 1.5rem;
   margin: 0.5rem;
   border: 3px solid #2a2a2a;
   max-width: 28rem;
-  width: 90%;
+  width: 100%;
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.15), inset 0 0 8px rgba(0, 0, 0, 0.4);
   position: relative;
   animation: scanline 6s linear infinite;
@@ -183,6 +376,12 @@ const FormCard = styled.div`
     0% { background-position: 0 0; }
     100% { background-position: 0 100%; }
   }
+
+  @media (max-width: 768px) {
+    max-width: 20rem;
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
 `;
 
 const Title = styled.h1`
@@ -201,6 +400,11 @@ const Title = styled.h1`
     from { width: 0; }
     to { width: 100%; }
   }
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -215,6 +419,10 @@ const Label = styled.label`
   font-size: 0.7rem;
   margin-bottom: 0.3rem;
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 0.6rem;
+  }
 `;
 
 const Input = styled.input`
@@ -235,8 +443,13 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: rgb(86, 86, 86);
+    color: #a0a0a0;
     font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.2rem;
   }
 `;
 
@@ -259,8 +472,13 @@ const TextArea = styled.textarea`
   }
 
   &::placeholder {
-    color: rgb(86, 86, 86);
+    color: #a0a0a0;
     font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.2rem;
   }
 `;
 
@@ -296,6 +514,11 @@ const Button = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
 `;
 
 const Spinner = styled.div`
@@ -310,12 +533,22 @@ const Spinner = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  @media (max-width: 768px) {
+    width: 14px;
+    height: 14px;
+  }
 `;
 
 const IconWrapper = styled.div`
   position: absolute;
   right: 0.5rem;
   top: 1.8rem;
+
+  @media (max-width: 768px) {
+    right: 0.4rem;
+    top: 1.6rem;
+  }
 `;
 
 // Options for react-select
@@ -346,6 +579,10 @@ const customSelectStyles = {
     '&:focus': {
       borderColor: '#00cc00',
       background: 'rgba(0, 255, 0, 0.1)'
+    },
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem',
+      padding: '0.3rem 0.2rem'
     }
   }),
   singleValue: (provided) => ({
@@ -362,7 +599,10 @@ const customSelectStyles = {
     background: 'rgba(120, 84, 43, 0.85)',
     border: '2px solid #2a2a2a',
     marginTop: '0',
-    fontFamily: '"Press Start 2P", "IBM Plex Mono", monospace'
+    fontFamily: '"Press Start 2P", "IBM Plex Mono", monospace',
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem'
+    }
   }),
   option: (provided, state) => ({
     ...provided,
@@ -372,7 +612,10 @@ const customSelectStyles = {
     fontSize: '0.85rem',
     '&:hover': {
       background: '#00cc00',
-      color: '#1a1a1a'
+      color: '#222222'
+    },
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem'
     }
   }),
   dropdownIndicator: (provided) => ({
@@ -395,13 +638,10 @@ const Main = () => {
     supply: '',
     platform: ''
   });
-  const [fundingData, setFundingData] = useState({
-    amount: '',
-    wallet: ''
-  });
   const [isLoading, setIsLoading] = useState(false);
-  const [isPlatformLoading, setIsPlatformLoading] = useState(false);
-  const [showFundingForm, setShowFundingForm] = useState(false);
+  const [isTokenGenerated, setIsTokenGenerated] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const tokenDisplayRef = useRef(null);
 
   // Simulate typewriter sound effect
   useEffect(() => {
@@ -417,16 +657,8 @@ const Main = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFundingChange = (e) => {
-    setFundingData({ ...fundingData, [e.target.name]: e.target.value });
-  };
-
   const handleSelectChange = (selectedOption) => {
-    setIsPlatformLoading(true);
-    setTimeout(() => {
-      setIsPlatformLoading(false);
-      setFormData({ ...formData, platform: selectedOption ? selectedOption.value : '' });
-    }, 1000); // 1-second delay for platform loading
+    setFormData({ ...formData, platform: selectedOption ? selectedOption.value : '' });
   };
 
   const handleGenerateToken = () => {
@@ -437,17 +669,32 @@ const Main = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      setShowFundingForm(true);
-    }, 1500); // 1.5-second delay
+      setIsTokenGenerated(true);
+    }, 1500);
   };
 
-  const handleFundToken = () => {
-    alert('Token Funding Simulated!');
-    // Reset forms for demo purposes
+  const handleSaveToken = () => {
+    if (tokenDisplayRef.current) {
+      html2canvas(tokenDisplayRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = `ProfitForgeToken_${formData.ticker || 'TKN'}.png`;
+        link.click();
+        setSaving(true);
+        setTimeout(() => setSaving(false), 1500);
+      }).catch(err => {
+        console.error('Error generating image:', err);
+        alert('Failed to download token image. Ensure images are accessible.');
+      });
+    } else {
+      setSaving(true);
+      setTimeout(() => setSaving(false), 1500);
+    }
     setFormData({ tokenName: '', description: '', ticker: '', supply: '', platform: '' });
-    setFundingData({ amount: '', wallet: '' });
-    setShowFundingForm(false);
-    setIsPlatformLoading(false);
+    setIsTokenGenerated(false);
   };
 
   return (
@@ -455,131 +702,114 @@ const Main = () => {
       <FontImport />
       <MainContainer>
         <ContentWrapper>
-          <TokenDisplay platform={formData.platform}>
-            {isPlatformLoading ? (
-              <LoadingText>
-                <Spinner />
-                Loading...
-              </LoadingText>
-            ) : formData.platform ? (
-              <TokenText>
-                {formData.tokenName || 'Token'} Ready
-                <br />
-                on {formData.platform}
-              </TokenText>
-            ) : (
-              <TokenText>Select a Platform</TokenText>
+          <TokenWrapper>
+            <TokenDisplay ref={tokenDisplayRef} platform={formData.platform}>
+              <MicrotextBorder />
+              {isLoading ? (
+                <LoadingText>
+                  <Spinner />
+                  Loading...
+                </LoadingText>
+              ) : isTokenGenerated ? (
+                <>
+                  <TokenHeader>
+                    <TokenName>{formData.tokenName || 'TOKEN'}</TokenName>
+                    <TokenTicker>{formData.ticker || 'TKN'}</TokenTicker>
+                  </TokenHeader>
+                  <TokenBody>
+                    <TokenSupply>{formData.supply || '0'}</TokenSupply>
+                    <TokenPlatform>{formData.platform}</TokenPlatform>
+                  </TokenBody>
+                  <TokenFooter>
+                    <TokenDescription>{formData.description || 'No description'}</TokenDescription>
+                  </TokenFooter>
+                </>
+              ) : formData.platform ? (
+                <TokenBody>
+                  <TokenPlatform>{formData.platform}</TokenPlatform>
+                </TokenBody>
+              ) : null}
+            </TokenDisplay>
+            {isTokenGenerated && (
+              <ButtonContainer>
+                <SaveButton onClick={handleSaveToken} saving={saving}>
+                  {saving ? 'Saved!' : 'Save Token'}
+                </SaveButton>
+              </ButtonContainer>
             )}
-          </TokenDisplay>
-          <FormContainer showFundingForm={showFundingForm}>
+          </TokenWrapper>
+          <FormContainer>
             <FormCard>
-              {showFundingForm ? (
-                <>
-                  <Title>Fund Token</Title>
-                  <FormGroup>
-                    <Label>Funding Amount</Label>
-                    <Input
-                      type="number"
-                      name="amount"
-                      value={fundingData.amount}
-                      onChange={handleFundingChange}
-                      placeholder="e.g., 1000"
-                    />
-                    <IconWrapper>
-                      <CoinIcon />
-                    </IconWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Wallet Address</Label>
-                    <Input
-                      type="text"
-                      name="wallet"
-                      value={fundingData.wallet}
-                      onChange={handleFundingChange}
-                      placeholder="e.g., 0x..."
-                    />
-                    <IconWrapper>
-                      <WalletIcon />
-                    </IconWrapper>
-                  </FormGroup>
-                  <Button onClick={handleFundToken}>
-                    Fund Token
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Title>Profit Forge</Title>
-                  <FormGroup>
-                    <Label>Platform</Label>
-                    <Select
-                      options={options}
-                      value={options.find((option) => option.value === formData.platform)}
-                      onChange={handleSelectChange}
-                      styles={customSelectStyles}
-                      placeholder="Select Platform"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Token Name</Label>
-                    <Input
-                      type="text"
-                      name="tokenName"
-                      value={formData.tokenName}
-                      onChange={handleChange}
-                      placeholder="Enter Token Name"
-                    />
-                    <IconWrapper>
-                      <CoinIcon />
-                    </IconWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Description</Label>
-                    <TextArea
-                      name="description"
-                      value={formData.description}
-                      onChange={handleChange}
-                      placeholder="Describe Your Token"
-                      rows="2"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Ticker Symbol</Label>
-                    <Input
-                      type="text"
-                      name="ticker"
-                      value={formData.ticker}
-                      onChange={handleChange}
-                      placeholder="e.g., PFGE"
-                    />
-                    <IconWrapper>
-                      <TickerIcon />
-                    </IconWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Total Supply</Label>
-                    <Input
-                      type="number"
-                      name="supply"
-                      value={formData.supply}
-                      onChange={handleChange}
-                      placeholder="e.g., 1000000"
-                    />
-                    <IconWrapper>
-                      <SupplyIcon />
-                    </IconWrapper>
-                  </FormGroup>
-                  <Button onClick={handleGenerateToken} disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Spinner />
-                        Loading...
-                      </>
-                    ) : (
-                      'Generate Token'
-                    )}
-                  </Button>
-                </>
-              )}
+              <Title>Profit Forge</Title>
+              <FormGroup>
+                <Label>Platform</Label>
+                <Select
+                  options={options}
+                  value={options.find((option) => option.value === formData.platform)}
+                  onChange={handleSelectChange}
+                  styles={customSelectStyles}
+                  placeholder="Select Platform"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Token Name</Label>
+                <Input
+                  type="text"
+                  name="tokenName"
+                  value={formData.tokenName}
+                  onChange={handleChange}
+                  placeholder="Enter Token Name"
+                />
+                <IconWrapper>
+                  <CoinIcon />
+                </IconWrapper>
+              </FormGroup>
+              <FormGroup>
+                <Label>Description</Label>
+                <TextArea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe Your Token"
+                  rows="2"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Ticker Symbol</Label>
+                <Input
+                  type="text"
+                  name="ticker"
+                  value={formData.ticker}
+                  onChange={handleChange}
+                  placeholder="e.g., PFGE"
+                />
+                <IconWrapper>
+                  <TickerIcon />
+                </IconWrapper>
+              </FormGroup>
+              <FormGroup>
+                <Label>Total Supply</Label>
+                <Input
+                  type="number"
+                  name="supply"
+                  value={formData.supply}
+                  onChange={handleChange}
+                  placeholder="e.g., 1000000"
+                />
+                <IconWrapper>
+                  <SupplyIcon />
+                </IconWrapper>
+              </FormGroup>
+              <Button onClick={handleGenerateToken} disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Spinner />
+                    Loading...
+                  </>
+                ) : (
+                  'Generate Token'
+                )}
+              </Button>
             </FormCard>
           </FormContainer>
         </ContentWrapper>
