@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { useLocation, useNavigate } from 'react-router-dom';
 import money1 from '../assets/money1.png';
 import money2 from '../assets/money2.png';
 import money3 from '../assets/money3.png';
@@ -33,8 +34,8 @@ const GuillocheBorder = styled.div`
   border: 10px solid transparent;
   box-sizing: border-box;
   background-image: 
-    repeating-linear-gradient(45deg, rgba(252, 237, 210, 0.2) 0px, rgba(74, 30, 43, 0.2) 2px, transparent 2px, transparent 8px),
-    repeating-linear-gradient(-45deg, rgba(252, 237, 210, 0.2) 0px, rgba(74, 30, 43, 0.2) 2px, transparent 2px, transparent 8px);
+    repeating-linear-gradient(45deg, rgba(245, 233, 203, 0.2) 0px, rgba(115, 94, 68, 0.2) 2px, transparent 2px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(245, 233, 203, 0.2) 0px, rgba(115, 94, 68, 0.2) 2px, transparent 2px, transparent 8px);
   opacity: 0.7;
 
   @media (max-width: 768px) {
@@ -55,8 +56,8 @@ const CurvedPattern = styled.div`
   pointer-events: none;
   z-index: 1;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(252, 237, 210, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(74, 30, 43, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(245, 233, 203, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(115, 94, 68, 0.08) 0%, transparent 50%);
 `;
 
 const MicroText = styled.div`
@@ -96,7 +97,7 @@ const WatermarkEffect = styled.div`
   bottom: 20%;
   right: 25%;
   opacity: 0.1;
-  background: radial-gradient(circle, rgba(74, 30, 43, 0.6) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(115, 94, 68, 0.6) 0%, transparent 70%);
   pointer-events: none;
   z-index: 1;
   border-radius: 50%;
@@ -110,17 +111,19 @@ const WatermarkEffect = styled.div`
 
 // Styled Components
 const CreateContainer = styled.div`
-  min-height: auto;
-  max-height: 90vh;
-  overflow-y: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: url(${bgCreate}) no-repeat center center/cover;
+  background: rgba(41, 41, 41, 0.56) url(${bgCreate}) no-repeat center center/cover;
+  background-attachment: fixed;
   background-size: cover;
   padding: 2rem;
   position: relative;
+  width: 100%;
+  color: #f5e9cb;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
 
   &:before {
     content: '';
@@ -129,13 +132,12 @@ const CreateContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.6));
+    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.73));
     pointer-events: none;
   }
 
   @media (max-width: 768px) {
     padding: 1.5rem;
-    max-height: 85vh;
   }
 
   @media (max-width: 480px) {
@@ -146,8 +148,8 @@ const CreateContainer = styled.div`
 const Title = styled.h1`
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
   font-size: 2rem;
-  color: #fcedd2;
-  text-shadow: 1px 1px 3px rgba(74, 30, 43, 0.3), 0 0 8px rgba(252, 237, 210, 0.5);
+  color: #f5e9cb;
+  text-shadow: 1px 1px 3px rgba(115, 94, 68, 0.3);
   margin-bottom: 2.5rem;
   text-align: center;
   letter-spacing: 0.1rem;
@@ -171,14 +173,14 @@ const NoteWrapper = styled.div`
   background: rgb(255, 236, 200);
   background-image: 
     radial-gradient(circle, #f5e9cb 1px, transparent 1px),
-    repeating-conic-gradient(from 0deg, rgba(252, 237, 210, 0.05) 0deg 10deg, rgba(74, 30, 43, 0.05) 10deg 20deg);
+    repeating-conic-gradient(from 0deg, rgba(245, 233, 203, 0.05) 0deg 10deg, rgba(115, 94, 68, 0.05) 10deg 20deg);
   background-size: 10px 10px, 100px 100px;
   border: 8px solid transparent;
-  border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0 L10 10 L20 0" stroke="%23fcedd2" stroke-width="2" fill="none"/><path d="M0 20 L10 10 L20 20" stroke="%234a1e2b" stroke-width="2" fill="none"/></svg>') 20 stretch;
+  border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0 L10 10 L20 0" stroke="%23f5e9cb" stroke-width="2" fill="none"/><path d="M0 20 L10 10 L20 20" stroke="%232a2a2a" stroke-width="2" fill="none"/></svg>') 20 stretch;
   box-shadow: 
-    inset 0 0 10px rgba(74, 30, 43, 0.4), 
+    inset 0 0 10px rgba(115, 94, 68, 0.4), 
     6px 6px 12px rgba(0, 0, 0, 0.3),
-    0 0 30px rgba(252, 237, 210, 0.2);
+    0 0 30px rgba(245, 233, 203, 0.2);
   overflow: hidden;
   filter: sepia(0.2);
   will-change: transform;
@@ -190,7 +192,7 @@ const NoteWrapper = styled.div`
     aspect-ratio: 3/2;
     border-width: 5px;
     box-shadow: 
-      inset 0 0 6px rgba(74, 30, 43, 0.4), 
+      inset 0 0 6px rgba(115, 94, 68, 0.4), 
       4px 4px 8px rgba(0, 0, 0, 0.3);
   }
 
@@ -239,8 +241,8 @@ const TokenName = styled.p`
   font-family: 'Cinzel', 'Times New Roman', serif;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1a3c34;
-  text-shadow: 1px 1px 2px rgba(74, 30, 43, 0.3);
+  color: #2a2a2a;
+  text-shadow: 1px 1px 2px rgba(115, 94, 68, 0.3);
   max-width: 85%;
   white-space: nowrap;
   overflow: hidden;
@@ -257,7 +259,7 @@ const TokenName = styled.p`
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #1a3c34, transparent);
+    background: linear-gradient(90deg, transparent, #2a2a2a, transparent);
   }
 
   @media (max-width: 768px) {
@@ -279,8 +281,8 @@ const Description = styled.p`
   transform: translateY(-50%);
   font-family: 'Playfair Display', 'Times New Roman', serif;
   font-size: 1.2rem;
-  color: #4a1e2b;
-  text-shadow: 1px 1px 1px rgba(26, 60, 52, 0.2);
+  color: #2a2a2a;
+  text-shadow: 1px 1px 1px rgba(115, 94, 68, 0.2);
   max-width: 45%;
   white-space: normal;
   overflow: hidden;
@@ -311,7 +313,7 @@ const Ticker = styled.p`
   font-family: 'Playfair Display', 'Times New Roman', serif;
   font-size: 1.1rem;
   color: #2a2a2a;
-  text-shadow: 1px 1px 1px rgba(74, 30, 43, 0.2);
+  text-shadow: 1px 1px 1px rgba(115, 94, 68, 0.2);
   max-width: 35%;
   white-space: nowrap;
   overflow: hidden;
@@ -321,7 +323,7 @@ const Ticker = styled.p`
   background: rgba(255, 255, 255, 0.3);
   padding: 0.3rem 0.5rem;
   border-radius: 0.2rem;
-  border: 1px solid rgba(74, 30, 43, 0.2);
+  border: 1px solid rgba(115, 94, 68, 0.2);
 
   @media (max-width: 768px) {
     font-size: 0.85rem;
@@ -344,8 +346,8 @@ const Supply = styled.p`
   left: 1.2rem;
   font-family: 'Cinzel', 'Times New Roman', serif;
   font-size: 1.2rem;
-  color: #1a3c34;
-  text-shadow: 1px 1px 1px rgba(74, 30, 43, 0.2);
+  color: #2a2a2a;
+  text-shadow: 1px 1px 1px rgba(115, 94, 68, 0.2);
   max-width: 45%;
   white-space: nowrap;
   overflow: hidden;
@@ -374,16 +376,16 @@ const Platform = styled.p`
   transform: translateX(-50%);
   font-family: 'Playfair Display', 'Times New Roman', serif;
   font-size: 1.1rem;
-  color: #4a1e2b;
-  text-shadow: 1px 1px 1px rgba(26, 60, 52, 0.2);
+  color: #2a2a2a;
+  text-shadow: 1px 1px 1px rgba(115, 94, 68, 0.2);
   max-width: 60%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
   z-index: 5;
-  border-top: 1px solid rgba(74, 30, 43, 0.3);
-  border-bottom: 1px solid rgba(74, 30, 43, 0.3);
+  border-top: 1px solid rgba(115, 94, 68, 0.3);
+  border-bottom: 1px solid rgba(115, 94, 68, 0.3);
   padding: 0.2rem 1rem;
 
   @media (max-width: 768px) {
@@ -405,7 +407,7 @@ const SerialNumber = styled.div`
   left: 1.2rem;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
-  color: #4a1e2b;
+  color: #2a2a2a;
   letter-spacing: 0.15rem;
   font-weight: bold;
   z-index: 5;
@@ -431,29 +433,29 @@ const SwiperWrapper = styled.div`
     width: 100%;
     height: 9rem;
     object-fit: cover;
-    border: 3px solid #fcedd2;
-    box-shadow: 0 0 6px rgba(74, 30, 43, 0.3);
+    border: 3px solid #f5e9cb;
+    box-shadow: 0 0 6px rgba(115, 94, 68, 0.3);
     display: block;
     loading: lazy;
   }
 
   .swiper-button-prev,
   .swiper-button-next {
-    background: #4a1e2b;
-    color: #fcedd2;
+    background: #2a2a2a;
+    color: #f5e9cb;
     width: 1.5rem;
     height: 1.5rem;
-    border: 2px solid #fcedd2;
-    box-shadow: 0 0 8px rgba(252, 237, 210, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.3);
+    border: 2px solid #735e44;
+    box-shadow: 0 0 8px rgba(115, 94, 68, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.3);
     border-radius: 0;
     transition: all 0.3s ease;
     font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
     --swiper-navigation-size: 0.8rem;
 
     &:hover {
-      background: #292929;
-      color: #4a1e2b;
-      box-shadow: 0 0 12px rgba(252, 237, 210, 0.7);
+      background: #f5e9cb;
+      color: #2a2a2a;
+      box-shadow: 0 0 12px rgba(115, 94, 68, 0.7);
     }
 
     &:active {
@@ -468,17 +470,17 @@ const SwiperWrapper = styled.div`
   }
 
   .swiper-pagination-bullet {
-    background: #4a1e2b;
+    background: #2a2a2a;
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 0;
-    box-shadow: 0 0 4px rgba(74, 30, 43, 0.5);
+    box-shadow: 0 0 4px rgba(115, 94, 68, 0.5);
     opacity: 0.7;
   }
 
   .swiper-pagination-bullet-active {
-    background: #fcedd2;
-    box-shadow: 0 0 6px rgba(252, 237, 210, 0.7);
+    background: #f5e9cb;
+    box-shadow: 0 0 6px rgba(245, 233, 203, 0.7);
     animation: crtFlicker 0.7s infinite;
 
     @keyframes crtFlicker {
@@ -503,8 +505,8 @@ const SwiperWrapper = styled.div`
       width: 1.5rem;
       height: 1.5rem;
       --swiper-navigation-size: 0.7rem;
-      border: 1px solid #fcedd2;
-      box-shadow: 0 0 6px rgba(252, 237, 210, 0.5);
+      border: 1px solid #735e44;
+      box-shadow: 0 0 6px rgba(115, 94, 68, 0.5);
     }
 
     .swiper-button-prev:after,
@@ -561,25 +563,25 @@ const StampSelector = styled.div`
 `;
 
 const StampButton = styled.button`
-  background: #4a1e2b;
-  color: #fcedd2;
-  font-family: 'Press Start 2P', 'IBM Plex Mono', monospaceghhh
+  background: #2a2a2a;
+  color: #f5e9cb;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
-  border: 2px solid #fcedd2;
+  border: 2px solid #735e44;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  box-shadow: 0 0 8px rgba(252, 237, 210, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.3);
-  background-image: radial-gradient(circle, rgba(252, 237, 210, 0.2), rgba(74, 30, 43, 0.2));
+  box-shadow: 0 0 8px rgba(115, 94, 68, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.3);
+  background-image: radial-gradient(circle, rgba(245, 233, 203, 0.2), rgba(115, 94, 68, 0.2));
   min-height: 2.75rem;
 
   &:hover {
-    background: #292929;
-    color: #4a1e2b;
-    box-shadow: 0 0 12px rgba(252, 237, 210, 0.7);
-    background-image: radial-gradient(circle, rgba(252, 237, 210, 0.4), rgba(74, 30, 43, 0.4));
+    background: #f5e9cb;
+    color: #2a2a2a;
+    box-shadow: 0 0 12px rgba(115, 94, 68, 0.7);
+    background-image: radial-gradient(circle, rgba(245, 233, 203, 0.4), rgba(115, 94, 68, 0.4));
   }
 
   &:active {
@@ -589,8 +591,8 @@ const StampButton = styled.button`
   @media (max-width: 768px) {
     font-size: 0.85rem;
     padding: 0.5rem 1rem;
-    border: 1px solid #fcedd2;
-    box-shadow: 0 0 6px rgba(252, 237, 210, 0.5);
+    border: 1px solid #735e44;
+    box-shadow: 0 0 6px rgba(115, 94, 68, 0.5);
   }
 
   @media (max-width: 480px) {
@@ -602,11 +604,11 @@ const StampButton = styled.button`
 
 const DownloadButton = styled(StampButton)`
   &:disabled {
-    background: #4a1e2b80;
-    color: #fcedd280;
+    background: #2a2a2a80;
+    color: #f5e9cb80;
     cursor: not-allowed;
     box-shadow: none;
-    border: 1px solid #fcedd280;
+    border: 1px solid #f5e9cb80;
   }
 `;
 
@@ -661,12 +663,15 @@ const generateSerialNumber = () => {
   return serial;
 };
 
-const Create = ({ formData, onClose }) => {
+const Create = () => {
   const [selectedBanknote, setSelectedBanknote] = useState(banknotes[0].src);
   const [selectedStamp, setSelectedStamp] = useState(stamps[0].src);
   const [serialNumber] = useState(generateSerialNumber());
   const [isDownloading, setIsDownloading] = useState(false);
   const noteWrapperRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const formData = location.state?.formData || {};
 
   const handleDownload = async () => {
     if (!noteWrapperRef.current) {
@@ -693,10 +698,14 @@ const Create = ({ formData, onClose }) => {
     }
   };
 
+  const handleBack = () => {
+    navigate('/');
+  };
+
   return (
     <>
       <FontImport />
-      <CreateContainer>
+      <CreateContainer role="main">
         <Title>Design Your Token</Title>
         <NoteWrapper ref={noteWrapperRef}>
           <NoteImage src={selectedBanknote} alt={`Banknote ${banknotes.find(n => n.src === selectedBanknote).name}`} loading="lazy" />
@@ -704,18 +713,14 @@ const Create = ({ formData, onClose }) => {
           <CurvedPattern />
           <MicroText />
           <WatermarkEffect />
-          {formData && (
-            <>
-              <TokenName>{formData.tokenName || 'EXAMPLE TOKEN'}</TokenName>
-              <Description>
-                {formData.description?.slice(0, 100) || 'Token Description Here'}
-              </Description>
-              <Ticker>{formData.ticker || 'TKN'}</Ticker>
-              <Supply>Supply: {formData.supply || '1,000,000'}</Supply>
-              <Platform>{formData.platform || 'ETHEREUM NETWORK'}</Platform>
-              <SerialNumber>{serialNumber}</SerialNumber>
-            </>
-          )}
+          <TokenName>{formData.tokenName || 'EXAMPLE TOKEN'}</TokenName>
+          <Description>
+            {formData.description?.slice(0, 100) || 'Token Description Here'}
+          </Description>
+          <Ticker>{formData.ticker || 'TKN'}</Ticker>
+          <Supply>Supply: {formData.supply || '1,000,000'}</Supply>
+          <Platform>{formData.platform || 'ETHEREUM NETWORK'}</Platform>
+          <SerialNumber>{serialNumber}</SerialNumber>
           <StampImage src={selectedStamp} alt={`Stamp ${stamps.find(s => s.src === selectedStamp).name}`} loading="lazy" />
         </NoteWrapper>
         <SwiperWrapper>
@@ -756,7 +761,7 @@ const Create = ({ formData, onClose }) => {
           >
             {isDownloading ? 'Generating...' : 'Download Banknote'}
           </DownloadButton>
-          <BackButton onClick={onClose} aria-label="Back to Form">
+          <BackButton onClick={handleBack} aria-label="Back to Home">
             Back
           </BackButton>
         </StampSelector>

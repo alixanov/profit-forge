@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import Main from '../components/Main';
 import Footer from '../components/Footer';
+import Create from '../components/Create';
 
 // Styled wrapper for the entire app
 const AppWrapper = styled.div`
@@ -127,6 +128,7 @@ const AppRoutes = () => {
               </NotFound>
             }
           />
+          <Route path={"/create" } element={<Create/>} />
         </Routes>
       </MainContent>
       <Footer />

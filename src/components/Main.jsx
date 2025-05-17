@@ -4,56 +4,10 @@ import bg from '../assets/bg-crypto.jpg';
 import Select from 'react-select';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
-import Create from './Create';
 
 // Import Press Start 2P font
 const FontImport = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-`;
-
-// Modal Styles
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
-const ModalContainer = styled.div`
-  background: rgba(245, 233, 203, 0.9);
-  border: 3px solid #2a2a2a;
-  box-shadow: 0 0 15px rgba(115, 94, 68, 0.3), inset 0 0 8px rgba(0, 0, 0, 0.4);
-  width: 96rem;
-  max-width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  animation: crtFlicker 0.3s;
-  padding: 1rem;
-  scroll-behavior: smooth;
-
-  @keyframes crtFlicker {
-    0% { opacity: 0.8; }
-    50% { opacity: 0.9; }
-    100% { opacity: 1; }
-  }
-
-  @media (max-width: 768px) {
-    width: 95vw;
-    max-width: 95%;
-    max-height: 85vh;
-    padding: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 0.75rem;
-  }
 `;
 
 // Notification Styles
@@ -207,7 +161,7 @@ const MainContainer = styled.div`
   align-items: center;
   background: rgba(41, 41, 41, 0.56) url(${bg}) no-repeat center center/cover;
   background-attachment: fixed;
-  background-size: cover; /* Растянет фон */
+  background-size: cover;
   position: relative;
   overflow-y: auto;
 
@@ -267,8 +221,7 @@ const TokenWrapper = styled.div`
 
   @media (max-width: 480px) {
     padding: 0.75rem;
-        margin-top:10rem;
-
+    margin-top: 10rem;
   }
 `;
 
@@ -813,10 +766,8 @@ const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTokenGenerated, setIsTokenGenerated] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [notification, setNotification] = useState(null);
   const tokenDisplayRef = useRef(null);
-  const modalRef = useRef(null);
   const navigate = useNavigate();
 
   // Simulate typewriter sound effect
@@ -828,39 +779,6 @@ const Main = () => {
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, []);
-
-  // Modal focus trap and Escape key handling
-  useEffect(() => {
-    if (isModalOpen && modalRef.current) {
-      const focusableElements = modalRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') {
-          setIsModalOpen(false);
-        }
-        if (e.key === 'Tab') {
-          if (e.shiftKey && document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement.focus();
-          } else if (!e.shiftKey && document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement.focus();
-          }
-        }
-      };
-
-      document.addEventListener('keydown', handleKeyDown);
-      firstElement.focus();
-
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
-    }
-  }, [isModalOpen]);
 
   // Notification auto-dismiss
   useEffect(() => {
@@ -928,7 +846,7 @@ const Main = () => {
   };
 
   const handleConfirm = () => {
-    setIsModalOpen(true);
+    navigate('/create', { state: { formData } });
   };
 
   const handleCloseNotification = () => {
@@ -960,13 +878,6 @@ const Main = () => {
             </TokenDisplay>
             {isTokenGenerated && (
               <ButtonContainer>
-                {/* <ActionButton
-                  onClick={handleSaveToken}
-                  disabled={saving}
-                  aria-label={saving ? 'Token Saved' : 'Save Token'}
-                >
-                  {saving ? 'Saved!' : 'Save Token'}
-                </ActionButton> */}
                 <ActionButton onClick={handleConfirm} aria-label="Confirm Token">
                   Confirm
                 </ActionButton>
@@ -1073,18 +984,6 @@ const Main = () => {
           </FormContainer>
         </ContentWrapper>
       </MainContainer>
-      {isModalOpen && (
-        <ModalOverlay onClick={() => setIsModalOpen(false)}>
-          <ModalContainer
-            ref={modalRef}
-            role="dialog"
-            aria-modal="true"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Create formData={formData} onClose={() => setIsModalOpen(false)} />
-          </ModalContainer>
-        </ModalOverlay>
-      )}
     </>
   );
 };
