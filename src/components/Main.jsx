@@ -8,7 +8,9 @@ import successSound from '../sound/success-83493.mp3';
 
 // Import Courier New font
 const FontImport = styled.div`
-  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
 `;
 
 // Scanline Overlay for retro CRT effect
@@ -256,7 +258,7 @@ const TokenWrapper = styled.div`
 
   @media (max-width: 480px) {
     padding: 0.4rem;
-    margin-top: 4rem;
+    margin-top: 1rem;
   }
 `;
 
@@ -493,8 +495,7 @@ const FormCard = styled.div`
   box-shadow: 0 0 12px rgba(115, 94, 68, 0.15), inset 0 0 6px rgba(0, 0, 0, 0.4);
   position: relative;
   filter: sepia(0.3);
-  font-family: 'Courier Prime', monospace;
-  color: #2a2a2a;
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  color: #2a2a2a;
 
   &:before {
     content: '';
@@ -521,8 +522,7 @@ const FormCard = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Courier Prime', monospace;
-  font-size: 1.3rem;
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 1.3rem;
   text-align: center;
   color: #2a2a2a;
   margin-bottom: 0.75rem;
@@ -554,11 +554,13 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   color: #2a2a2a;
-  font-family: 'Courier Prime', monospace;
-  font-size: 0.75rem;
+    font-weight: 100; /* Добавлен вес шрифта */
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
   margin-bottom: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
+      font-size: 0.45rem;
+  
   filter: blur(0.5px);
 
   @media (max-width: 768px) {
@@ -726,8 +728,8 @@ const SelectButton = styled.button`
   border: none;
   border-bottom: 2px dashed #2a2a2a;
   color: #2a2a2a;
-  font-family: 'Courier Prime', monospace;
-  font-size: 0.8rem;
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
+  font-size: 0.7rem;
   padding: 0.25rem 0.15rem;
   text-align: left;
   cursor: pointer;
@@ -768,6 +770,8 @@ const SelectDropdown = styled.div`
   z-index: 20;
   max-height: 7rem;
   overflow-y: auto;
+      font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
+
   filter: sepia(0.3) blur(0.5px);
 
   @media (max-width: 768px) {
@@ -781,12 +785,13 @@ const SelectDropdown = styled.div`
 
 const SelectOption = styled.div`
   padding: 0.25rem 0.4rem;
-  font-family: 'Courier Prime', monospace;
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
   font-size: 0.8rem;
   color: #2a2a2a;
   cursor: pointer;
   transition: background 0.3s ease;
   letter-spacing: 0.05rem;
+    font-size: 0.55rem;
 
   &:hover {
     background: #735e44;
@@ -813,8 +818,8 @@ const Button = styled.button`
   width: 100%;
   background: #2a2a2a;
   color: #f5e9cb;
-  font-family: 'Courier Prime', monospace;
-  font-size: 0.8rem;
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
+  font-size: 0.6rem;
   padding: 0.3rem;
   border: 2px solid #735e44;
   border-radius: 0;
