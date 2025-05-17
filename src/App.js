@@ -1,14 +1,10 @@
 import React from 'react'
-import Main from './components/Main'
-import Start from './components/Start'
-import Footer from './components/Footer'
+import Genaral from './components/General'
 
 const App = () => {
   return (
     <div>
-      <Start/>
-      <Main/>
-      <Footer/>
+      <Genaral/>
     </div>
   )
 }
