@@ -9,8 +9,8 @@ import styled from 'styled-components'
 const Genaral = () => {
   return (
 <div>
-      <Start />
       <Main />
+      <Start />
       <Footer />
 </div>
   )
