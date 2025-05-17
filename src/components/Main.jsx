@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import bg from '../assets/bg-crypto.webp';
+import bg from '../assets/bg-crypto.jpg';
 import Select from 'react-select';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
@@ -474,9 +474,6 @@ const FormContainer = styled.div`
     width: 100%;
   }
 `;
-
-
-
 
 const FormCard = styled.div`
   background: rgba(115, 94, 68, 0.55);
