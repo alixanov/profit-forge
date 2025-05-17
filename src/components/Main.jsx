@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import keyboardSound from '../sound/typing-on-keyboard-335502.mp3';
 import successSound from '../sound/success-83493.mp3';
 
-// Import Courier New font
+// Import fonts
 const FontImport = styled.div`
- @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
 `;
@@ -223,17 +223,21 @@ const ContentWrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1rem;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
     flex-direction: column;
     min-height: auto;
-    padding: 0.75rem;
+    padding: 1rem;
     align-items: center;
     justify-content: flex-start;
-    gap: 0.75rem;
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem;
   }
 `;
 
@@ -243,29 +247,29 @@ const TokenWrapper = styled.div`
   align-items: center;
   gap: 0.4rem;
   background: radial-gradient(circle, rgba(115, 94, 68, 0.2), rgba(0, 0, 0, 0.5));
-  padding: 0.75rem;
+  padding: 1rem;
   border: 2px dashed #2a2a2a;
   box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
   position: relative;
   will-change: transform;
   width: 100%;
-  max-width: 22rem;
+  max-width: 48rem;
 
   @media (max-width: 768px) {
     max-width: 90vw;
-    padding: 0.5rem;
+    padding: 0.75rem;
   }
 
   @media (max-width: 480px) {
-    padding: 0.4rem;
-    margin-top: 1rem;
+    padding: 0.5rem;
+    margin-top: 0;
   }
 `;
 
 const TokenDisplay = styled.div`
   width: 100%;
-  max-width: 22rem;
-  min-height: 18rem;
+  max-width: 48rem;
+  min-height: 28rem;
   background: #f5e9cb;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgYwAAD4BAABvfBgtW3MAAAAASUVORK5CYII=') repeat,
     radial-gradient(circle, rgba(115, 94, 68, 0.1) 1px, transparent 1px);
@@ -277,11 +281,10 @@ const TokenDisplay = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
-  padding: 1rem;
+  padding: 1.5rem;
   font-family: 'Courier Prime', monospace;
   color: #2a2a2a;
   filter: sepia(0.3) blur(0.5px);
-  transform: rotate(-1deg);
   will-change: transform;
 
   &:after {
@@ -297,50 +300,50 @@ const TokenDisplay = styled.div`
 
   @media (max-width: 768px) {
     max-width: 90vw;
-    min-height: 16rem;
-    padding: 0.75rem;
+    min-height: 20rem;
+    padding: 1rem;
   }
 
   @media (max-width: 480px) {
-    min-height: 14rem;
-    padding: 0.5rem;
+    min-height: 18rem;
+    padding: 0.75rem;
   }
 `;
 
 const IconImage = styled.img`
-  max-width: 70px;
-  max-height: 70px;
-  margin-top: 0.5rem;
+  max-width: 100px;
+  max-height: 100px;
+  margin-top: 0.75rem;
   border: 2px dashed #735e44;
   object-fit: contain;
   filter: sepia(0.3);
 
   @media (max-width: 768px) {
-    max-width: 50px;
-    max-height: 50px;
+    max-width: 70px;
+    max-height: 70px;
   }
 
   @media (max-width: 480px) {
-    max-width: 40px;
-    max-height: 40px;
+    max-width: 50px;
+    max-height: 50px;
   }
 `;
 
 const DataList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.85rem;
+  gap: 0.4rem;
+  font-size: 1rem;
   line-height: 1.4;
   letter-spacing: 0.05rem;
 
   @media (max-width: 768px) {
-    font-size: 0.75rem;
-    gap: 0.25rem;
+    font-size: 0.85rem;
+    gap: 0.3rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -353,11 +356,11 @@ const DataItem = styled.div`
 
 const DescriptionItem = styled.div`
   width: 90%;
-  height: 4.5rem;
+  height: 6rem;
   white-space: normal;
   word-break: break-word;
   overflow-y: auto;
-  padding-right: 0.3rem;
+  padding-right: 0.5rem;
   scrollbar-width: thin;
 
   &::-webkit-scrollbar {
@@ -374,21 +377,21 @@ const DescriptionItem = styled.div`
   }
 
   @media (max-width: 768px) {
-    height: 3.5rem;
+    height: 5rem;
   }
 
   @media (max-width: 480px) {
-    height: 3rem;
+    height: 4rem;
   }
 `;
 
 const LoadingText = styled.div`
   font-family: 'Courier Prime', monospace;
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #735e44;
   text-shadow: 1px 1px 2px rgba(115, 94, 68, 0.2);
   text-align: center;
-  padding: 0.5rem;
+  padding: 0.75rem;
   background: rgba(0, 0, 0, 0.7);
   border: 2px dashed #2a2a2a;
   max-width: 90%;
@@ -401,20 +404,20 @@ const LoadingText = styled.div`
   transform: translate(-50%, -50%);
 
   @media (max-width: 768px) {
-    font-size: 0.75rem;
-    padding: 0.4rem;
+    font-size: 0.85rem;
+    padding: 0.5rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.7rem;
-    padding: 0.3rem;
+    font-size: 0.8rem;
+    padding: 0.4rem;
   }
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 0.3rem;
+  gap: 0.5rem;
   margin-top: 0.3rem;
   position: relative;
 
@@ -429,7 +432,7 @@ const ActionButton = styled.button`
   background: #2a2a2a;
   color: ${({ disabled }) => (disabled ? '#1a1a1a' : '#f5e9cb')};
   font-family: 'Courier Prime', monospace;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   padding: 0.3rem 0.5rem;
   border: 2px solid #735e44;
   border-radius: 0;
@@ -437,7 +440,7 @@ const ActionButton = styled.button`
   transition: all 0.3s ease;
   box-shadow: 0 0 5px rgba(115, 94, 68, 0.2);
   text-transform: uppercase;
-  width: 6.5rem;
+  width: 8rem;
   text-align: center;
   filter: blur(0.5px);
 
@@ -458,14 +461,14 @@ const ActionButton = styled.button`
 
   @media (max-width: 768px) {
     width: 100%;
-    max-width: 11rem;
-    font-size: 0.75rem;
+    max-width: 14rem;
+    font-size: 0.8rem;
     padding: 0.3rem;
     min-height: 1.8rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     padding: 0.25rem;
     min-height: 1.6rem;
   }
@@ -476,7 +479,7 @@ const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 24rem;
+  max-width: 28rem;
 
   @media (max-width: 768px) {
     max-width: 90vw;
@@ -490,12 +493,13 @@ const FormCard = styled.div`
   margin: 0.3rem;
   border: 2px solid #2a2a2a;
   width: 100%;
-  max-width: 24rem;
+  max-width: 28rem;
   min-height: auto;
   box-shadow: 0 0 12px rgba(115, 94, 68, 0.15), inset 0 0 6px rgba(0, 0, 0, 0.4);
   position: relative;
   filter: sepia(0.3);
-    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  color: #2a2a2a;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  color: #2a2a2a;
 
   &:before {
     content: '';
@@ -522,7 +526,8 @@ const FormCard = styled.div`
 `;
 
 const Title = styled.h1`
-    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 1.3rem;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 1.3rem;
   text-align: center;
   color: #2a2a2a;
   margin-bottom: 0.75rem;
@@ -554,13 +559,12 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   color: #2a2a2a;
-    font-weight: 100; /* Добавлен вес шрифта */
-    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
+  font-weight: 100;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 0.45rem;
   margin-bottom: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
-      font-size: 0.45rem;
-  
   filter: blur(0.5px);
 
   @media (max-width: 768px) {
@@ -728,8 +732,8 @@ const SelectButton = styled.button`
   border: none;
   border-bottom: 2px dashed #2a2a2a;
   color: #2a2a2a;
-    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
-  font-size: 0.7rem;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
   padding: 0.25rem 0.15rem;
   text-align: left;
   cursor: pointer;
@@ -770,8 +774,8 @@ const SelectDropdown = styled.div`
   z-index: 20;
   max-height: 7rem;
   overflow-y: auto;
-      font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
-
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
   filter: sepia(0.3) blur(0.5px);
 
   @media (max-width: 768px) {
@@ -785,13 +789,12 @@ const SelectDropdown = styled.div`
 
 const SelectOption = styled.div`
   padding: 0.25rem 0.4rem;
-    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
-  font-size: 0.8rem;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+  font-size: 0.55rem;
   color: #2a2a2a;
   cursor: pointer;
   transition: background 0.3s ease;
   letter-spacing: 0.05rem;
-    font-size: 0.55rem;
 
   &:hover {
     background: #735e44;
@@ -818,7 +821,7 @@ const Button = styled.button`
   width: 100%;
   background: #2a2a2a;
   color: #f5e9cb;
-    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;  font-size: 0.75rem;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
   font-size: 0.6rem;
   padding: 0.3rem;
   border: 2px solid #735e44;
@@ -961,16 +964,12 @@ const Main = () => {
   // Handle typing sound on keypress
   const handleKeyPress = () => {
     if (typingAudioRef.current) {
-      // Clear any existing timeout
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
-      // Stop and reset current audio
       typingAudioRef.current.pause();
       typingAudioRef.current.currentTime = 0;
-      // Play audio
       typingAudioRef.current.play().catch((err) => console.error('Audio play error:', err));
-      // Set timeout to stop after 0.5 seconds
       typingTimeoutRef.current = setTimeout(() => {
         if (typingAudioRef.current) {
           typingAudioRef.current.pause();
