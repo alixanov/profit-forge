@@ -10,7 +10,7 @@ const Genaral = () => {
   return (
 <div>
       <Main />
-      <Start />
+      {/* <Start /> */}
       <Footer />
 </div>
   )

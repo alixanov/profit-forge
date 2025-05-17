@@ -4,8 +4,12 @@ import bg from '../assets/bg-crypto.jpg';
 import Select from 'react-select';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
-import { StyleSheetManager } from 'styled-components';
 import Create from './Create';
+
+// Import Press Start 2P font
+const FontImport = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+`;
 
 // Modal Styles
 const ModalOverlay = styled.div`
@@ -19,11 +23,6 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
-
-  @media (max-width: 768px) {
-    align-items: flex-start;
-    padding-top: 1rem;
-  }
 `;
 
 const ModalContainer = styled.div`
@@ -36,7 +35,7 @@ const ModalContainer = styled.div`
   overflow-y: auto;
   position: relative;
   animation: crtFlicker 0.3s;
-  padding: 1.5rem;
+  padding: 1rem;
   scroll-behavior: smooth;
 
   @keyframes crtFlicker {
@@ -47,6 +46,7 @@ const ModalContainer = styled.div`
 
   @media (max-width: 768px) {
     width: 95vw;
+    max-width: 95%;
     max-height: 85vh;
     padding: 1rem;
   }
@@ -73,7 +73,7 @@ const Notification = styled.div`
   align-items: center;
   gap: 0.5rem;
   box-shadow: 0 2px 8px rgba(115, 94, 68, 0.2);
-  animation: slideIn 0.3s ease-out;
+  animation: slideIn 0.3s ease-out, crtFlicker 0.3s;
   z-index: 10;
   filter: sepia(0.1);
   max-width: 90%;
@@ -101,6 +101,12 @@ const Notification = styled.div`
     to { opacity: 1; transform: translateY(0); }
   }
 
+  @keyframes crtFlicker {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+
   @media (max-width: 768px) {
     font-size: 0.85rem;
     padding: 0.5rem 1rem;
@@ -119,8 +125,8 @@ const NotificationClose = styled.button`
   background: #2a2a2a;
   border: 1px solid #735e44;
   border-radius: 50%;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -144,8 +150,8 @@ const NotificationClose = styled.button`
   }
 
   svg {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   @media (max-width: 768px) {
@@ -186,7 +192,7 @@ const SupplyIcon = () => (
 );
 
 const CloseIcon = () => (
-  <svg width="8" height="8" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="6" height="6" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="2" y="2" width="12" height="2" fill="#735e44" transform="rotate(45 8 8)" />
     <rect x="2" y="2" width="12" height="2" fill="#735e44" transform="rotate(-45 8 8)" />
     <rect x="2" y="2" width="12" height="2" fill="#2a2a2a" transform="rotate(45 8 8)" opacity="0.3" />
@@ -195,13 +201,13 @@ const CloseIcon = () => (
 );
 
 const MainContainer = styled.div`
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(41, 41, 41, 0.56) url(${bg}) no-repeat center center/cover;
   background-attachment: fixed;
-  background-size: cover;
+  background-size: cover; /* Растянет фон */
   position: relative;
   overflow-y: auto;
 
@@ -217,11 +223,8 @@ const MainContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 0.75rem;
+    background-size: cover;
+    object-fit: cover;
   }
 `;
 
@@ -233,17 +236,14 @@ const ContentWrapper = styled.div`
   justify-content: space-between;
   position: relative;
   gap: 2rem;
-  padding: 2rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    padding: 1.5rem 1rem;
+    height: auto;
+    padding: 2rem 1rem;
+    align-items: stretch;
+    justify-content: flex-start;
     gap: 1.5rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem 0.75rem;
-    gap: 1rem;
   }
 `;
 
@@ -251,7 +251,7 @@ const TokenWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   background: radial-gradient(circle, rgba(115, 94, 68, 0.2), rgba(0, 0, 0, 0.5));
   padding: 1.5rem;
   border: 2px solid #2a2a2a;
@@ -261,12 +261,14 @@ const TokenWrapper = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    max-width: 95vw;
+    max-width: 90vw;
     padding: 1rem;
   }
 
   @media (max-width: 480px) {
     padding: 0.75rem;
+        margin-top:10rem;
+
   }
 `;
 
@@ -284,6 +286,7 @@ const TokenDisplay = styled.div`
   justify-content: flex-start;
   position: relative;
   padding: 2rem;
+  animation: crtFlicker 0.3s 0.7s;
   font-family: 'Courier New', monospace;
   color: #3a3a3a;
   filter: sepia(0.2);
@@ -301,34 +304,35 @@ const TokenDisplay = styled.div`
     pointer-events: none;
   }
 
+  @keyframes crtFlicker {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+
   @media (max-width: 768px) {
     width: 100%;
-    max-width: 95vw;
-    min-height: 24rem;
-    padding: 1.5rem;
+    max-width: 90vw;
+    min-height: 20rem;
+    padding: 1rem;
   }
 
   @media (max-width: 480px) {
-    min-height: 20rem;
-    padding: 1rem;
+    padding: 0.75rem;
   }
 `;
 
 const DataList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
   font-size: 1rem;
-  line-height: 1.4;
+  line-height: 1.3;
   letter-spacing: 0.05rem;
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
-    gap: 0.6rem;
-  }
-
-  @media (max-width: 480px) {
     font-size: 0.85rem;
+    gap: 0.5rem;
   }
 `;
 
@@ -349,7 +353,7 @@ const DescriptionItem = styled.div`
   scrollbar-width: thin;
 
   &::-webkit-scrollbar {
-    width: 0.3rem;
+    width: 0.2rem;
   }
 
   &::-webkit-scrollbar-track {
@@ -363,10 +367,6 @@ const DescriptionItem = styled.div`
 
   @media (max-width: 768px) {
     height: 6rem;
-  }
-
-  @media (max-width: 480px) {
-    height: 5rem;
   }
 `;
 
@@ -389,12 +389,12 @@ const LoadingText = styled.div`
   transform: translate(-50%, -50%);
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     padding: 0.6rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     padding: 0.5rem;
   }
 `;
@@ -402,8 +402,8 @@ const LoadingText = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
   position: relative;
 
   @media (max-width: 768px) {
@@ -418,16 +418,15 @@ const ActionButton = styled.button`
   color: ${({ disabled }) => (disabled ? '#1a1a1a' : '#735e44')};
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   border: 2px solid #735e44;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 0 6px rgba(115, 94, 68, 0.2);
   text-transform: uppercase;
-  width: 10rem;
+  width: 9rem;
   text-align: center;
-  min-height: 2.75rem;
 
   &:hover {
     background: #f5e9cb;
@@ -448,10 +447,13 @@ const ActionButton = styled.button`
     width: 100%;
     max-width: 16rem;
     font-size: 0.85rem;
+    padding: 0.5rem;
+    min-height: 2.75rem;
   }
 
   @media (max-width: 480px) {
     font-size: 0.8rem;
+    padding: 0.4rem;
     min-height: 2.5rem;
   }
 `;
@@ -460,6 +462,13 @@ const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: crtFlicker 0.3s 0.7s;
+
+  @keyframes crtFlicker {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
 
   @media (max-width: 768px) {
     width: 100%;
@@ -475,20 +484,26 @@ const FormCard = styled.div`
   min-height: 36rem;
   box-shadow: 0 0 15px rgba(115, 94, 68, 0.15), inset 0 0 8px rgba(0, 0, 0, 0.4);
   position: relative;
+  animation: scanline 6s linear infinite;
   will-change: transform;
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
 
+  @keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+  }
+
   @media (max-width: 768px) {
     width: 100%;
-    max-width: 95vw;
-    min-height: 28rem;
-    padding: 1.5rem;
-    margin: 0;
+    max-width: 90vw;
+    min-height: auto;
+    padding: 1.25rem;
+    margin: 0.5rem 0;
+    animation: scanline 4s linear infinite;
   }
 
   @media (max-width: 480px) {
     padding: 1rem;
-    min-height: 24rem;
   }
 `;
 
@@ -497,15 +512,22 @@ const Title = styled.h1`
   font-size: 2rem;
   text-align: center;
   color: #2a2a2a;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   text-shadow: 1px 1px 3px rgba(115, 94, 68, 0.2);
   overflow: hidden;
   white-space: nowrap;
+  animation: typewriter 2s steps(40, end);
   letter-spacing: 0.1rem;
+
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
 
   @media (max-width: 768px) {
     font-size: 1.6rem;
     margin-bottom: 1rem;
+    animation: typewriter 1.5s steps(40, end);
   }
 
   @media (max-width: 480px) {
@@ -515,10 +537,10 @@ const Title = styled.h1`
 
 const FormGroup = styled.div`
   position: relative;
-  margin-bottom: ${({ hasNotification }) => (hasNotification ? '2.5rem' : '1.25rem')};
+  margin-bottom: ${({ hasNotification }) => (hasNotification ? '2.5rem' : '1rem')};
 
   @media (max-width: 768px) {
-    margin-bottom: ${({ hasNotification }) => (hasNotification ? '2.25rem' : '1rem')};
+    margin-bottom: ${({ hasNotification }) => (hasNotification ? '2.25rem' : '1.25rem')};
   }
 `;
 
@@ -526,8 +548,8 @@ const Label = styled.label`
   display: block;
   color: #2a2a2a;
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
-  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
   text-transform: uppercase;
 
   @media (max-width: 768px) {
@@ -543,10 +565,10 @@ const Input = styled.input`
   color: #2a2a2a;
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
   font-size: 0.9rem;
-  padding: 0.5rem 0.3rem;
+  padding: 0.3rem 0.2rem;
   outline: none;
   transition: border-color 0.3s ease, background 0.3s ease;
-  min-height: 2.75rem;
+  min-height: 2.5rem;
 
   &:focus {
     border-color: #735e44;
@@ -565,6 +587,7 @@ const Input = styled.input`
 
   @media (max-width: 480px) {
     font-size: 0.8rem;
+    padding: 0.3rem 0.2rem;
   }
 `;
 
@@ -576,11 +599,11 @@ const TextArea = styled.textarea`
   color: #2a2a2a;
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
   font-size: 0.9rem;
-  padding: 0.5rem 0.3rem;
+  padding: 0.3rem 0.2rem;
   outline: none;
   resize: none;
   transition: border-color 0.3s ease, background 0.3s ease;
-  min-height: 4rem;
+  min-height: 2.5rem;
 
   &:focus {
     border-color: #735e44;
@@ -599,6 +622,7 @@ const TextArea = styled.textarea`
 
   @media (max-width: 480px) {
     font-size: 0.8rem;
+    padding: 0.3rem 0.2rem;
   }
 `;
 
@@ -608,7 +632,7 @@ const Button = styled.button`
   color: #735e44;
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
   font-size: 0.9rem;
-  padding: 0.5rem;
+  padding: 0.4rem;
   border: 2px solid #735e44;
   border-radius: 0;
   cursor: pointer;
@@ -638,10 +662,12 @@ const Button = styled.button`
 
   @media (max-width: 768px) {
     font-size: 0.85rem;
+    padding: 0.5rem;
   }
 
   @media (max-width: 480px) {
     font-size: 0.8rem;
+    padding: 0.4rem;
     min-height: 2.5rem;
   }
 `;
@@ -658,12 +684,17 @@ const Spinner = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  @media (max-width: 768px) {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 const IconWrapper = styled.div`
   position: absolute;
   right: 0.5rem;
-  top: 1.8rem;
+  top: 1.6rem;
 
   svg {
     width: 20px;
@@ -671,7 +702,8 @@ const IconWrapper = styled.div`
   }
 
   @media (max-width: 768px) {
-    top: 1.6rem;
+    right: 0.5rem;
+    top: 1.5rem;
     svg {
       width: 18px;
       height: 18px;
@@ -684,7 +716,7 @@ const options = [
   { value: '', label: 'Select Platform' },
   { value: 'Ethereum', label: 'Ethereum' },
   { value: 'Binance', label: 'Binance Smart Chain' },
-  { value: 'Solana', label: 'Solana' },
+  { value: 'Solana', label: 'Solana' }
 ];
 
 // Custom styles for react-select
@@ -697,34 +729,35 @@ const customSelectStyles = {
     color: '#2a2a2a',
     fontFamily: '"Press Start 2P", "IBM Plex Mono", monospace',
     fontSize: '0.9rem',
-    padding: '0.5rem 0.3rem',
+    padding: '0.3rem 0.2rem',
     outline: 'none',
     boxShadow: 'none',
     cursor: 'pointer',
-    minHeight: '2.75rem',
+    minHeight: '2.5rem',
     '&:hover': {
-      borderColor: '#2a2a2a',
+      borderColor: '#2a2a2a'
     },
     '&:focus': {
       borderColor: '#735e44',
-      background: 'rgba(115, 94, 68, 0.1)',
+      background: 'rgba(115, 94, 68, 0.1)'
     },
     '@media (max-width: 768px)': {
       fontSize: '0.85rem',
-      padding: '0.4rem 0.3rem',
+      padding: '0.4rem 0.3rem'
     },
     '@media (max-width: 480px)': {
       fontSize: '0.8rem',
-    },
+      padding: '0.3rem 0.2rem'
+    }
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: '#2a2a2a',
+    color: '#2a2a2a'
   }),
   placeholder: (provided) => ({
     ...provided,
     color: '#735e44',
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   }),
   menu: (provided) => ({
     ...provided,
@@ -734,11 +767,11 @@ const customSelectStyles = {
     fontFamily: '"Press Start 2P", "IBM Plex Mono", monospace',
     zIndex: 20,
     '@media (max-width: 768px)': {
-      fontSize: '0.85rem',
+      fontSize: '0.85rem'
     },
     '@media (max-width: 480px)': {
-      fontSize: '0.8rem',
-    },
+      fontSize: '0.8rem'
+    }
   }),
   option: (provided, state) => ({
     ...provided,
@@ -748,25 +781,25 @@ const customSelectStyles = {
     fontSize: '0.9rem',
     '&:hover': {
       background: '#f5e9cb',
-      color: '#1a1a1a',
+      color: '#1a1a1a'
     },
     '@media (max-width: 768px)': {
-      fontSize: '0.85rem',
+      fontSize: '0.85rem'
     },
     '@media (max-width: 480px)': {
-      fontSize: '0.8rem',
-    },
+      fontSize: '0.8rem'
+    }
   }),
   dropdownIndicator: (provided) => ({
     ...provided,
     color: '#2a2a2a',
     '&:hover': {
-      color: '#735e44',
-    },
+      color: '#735e44'
+    }
   }),
   indicatorSeparator: () => ({
-    display: 'none',
-  }),
+    display: 'none'
+  })
 };
 
 const Main = () => {
@@ -775,7 +808,7 @@ const Main = () => {
     description: '',
     ticker: '',
     supply: '',
-    platform: '',
+    platform: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isTokenGenerated, setIsTokenGenerated] = useState(false);
@@ -834,7 +867,7 @@ const Main = () => {
     if (notification) {
       const timer = setTimeout(() => {
         setNotification((prev) => ({ ...prev, isClosing: true }));
-        setTimeout(() => setNotification(null), 300);
+        setTimeout(() => setNotification(null), 300); // Match CSS transition
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -853,7 +886,7 @@ const Main = () => {
       setNotification({
         message: 'Please select a platform!',
         target: 'platform',
-        isClosing: false,
+        isClosing: false
       });
       return;
     }
@@ -868,7 +901,7 @@ const Main = () => {
     if (tokenDisplayRef.current) {
       html2canvas(tokenDisplayRef.current, {
         backgroundColor: '#ffffff',
-        scale: 2,
+        scale: 2
       })
         .then((canvas) => {
           const link = document.createElement('a');
@@ -883,7 +916,7 @@ const Main = () => {
           setNotification({
             message: 'Failed to download token image.',
             target: 'save',
-            isClosing: false,
+            isClosing: false
           });
         });
     } else {
@@ -900,11 +933,12 @@ const Main = () => {
 
   const handleCloseNotification = () => {
     setNotification((prev) => ({ ...prev, isClosing: true }));
-    setTimeout(() => setNotification(null), 300);
+    setTimeout(() => setNotification(null), 300); // Match CSS transition
   };
 
   return (
-    <StyleSheetManager>
+    <>
+      <FontImport />
       <MainContainer id="main-component">
         <ContentWrapper>
           <TokenWrapper>
@@ -926,13 +960,13 @@ const Main = () => {
             </TokenDisplay>
             {isTokenGenerated && (
               <ButtonContainer>
-                <ActionButton
+                {/* <ActionButton
                   onClick={handleSaveToken}
                   disabled={saving}
                   aria-label={saving ? 'Token Saved' : 'Save Token'}
                 >
                   {saving ? 'Saved!' : 'Save Token'}
-                </ActionButton>
+                </ActionButton> */}
                 <ActionButton onClick={handleConfirm} aria-label="Confirm Token">
                   Confirm
                 </ActionButton>
@@ -962,7 +996,6 @@ const Main = () => {
                   onChange={handleSelectChange}
                   styles={customSelectStyles}
                   placeholder="Select Platform"
-                  aria-label="Select Platform"
                 />
                 {notification && notification.target === 'platform' && (
                   <Notification
@@ -985,7 +1018,6 @@ const Main = () => {
                   value={formData.tokenName}
                   onChange={handleChange}
                   placeholder="Enter Token Name"
-                  aria-label="Token Name"
                 />
                 <IconWrapper>
                   <CoinIcon />
@@ -999,7 +1031,6 @@ const Main = () => {
                   onChange={handleChange}
                   placeholder="Describe Your Token"
                   rows={3}
-                  aria-label="Token Description"
                 />
               </FormGroup>
               <FormGroup>
@@ -1010,7 +1041,6 @@ const Main = () => {
                   value={formData.ticker}
                   onChange={handleChange}
                   placeholder="e.g., PFGE"
-                  aria-label="Ticker Symbol"
                 />
                 <IconWrapper>
                   <TickerIcon />
@@ -1024,13 +1054,12 @@ const Main = () => {
                   value={formData.supply}
                   onChange={handleChange}
                   placeholder="e.g., 1000000"
-                  aria-label="Total Supply"
                 />
                 <IconWrapper>
                   <SupplyIcon />
                 </IconWrapper>
               </FormGroup>
-              <Button onClick={handleGenerateToken} disabled={isLoading} aria-label="Generate Token">
+              <Button onClick={handleGenerateToken} disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Spinner />
@@ -1052,13 +1081,11 @@ const Main = () => {
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
           >
-            <StyleSheetManager>
-              <Create formData={formData} onClose={() => setIsModalOpen(false)} />
-            </StyleSheetManager>
+            <Create formData={formData} onClose={() => setIsModalOpen(false)} />
           </ModalContainer>
         </ModalOverlay>
       )}
-    </StyleSheetManager>
+    </>
   );
 };
 
