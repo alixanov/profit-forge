@@ -486,6 +486,7 @@ const FormCard = styled.div`
   position: relative;
   animation: scanline 6s linear infinite;
   will-change: transform;
+  font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
 
   @keyframes scanline {
     0% { background-position: 0 0; }
