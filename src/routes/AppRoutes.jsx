@@ -30,13 +30,7 @@ const MainContent = styled.main`
   width: 100%;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
 
-  @media (max-width: 480px) {
-    padding: 1rem;
-  }
 `;
 
 // NotFound component for 404 pages
