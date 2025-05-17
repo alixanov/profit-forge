@@ -13,7 +13,7 @@ const FooterContainer = styled.footer`
   background-size: 4px 4px;
   background-attachment: fixed;
   border-top: 3px solid #2a2a2a;
-  padding: 2rem;
+  padding: 1.9rem;
   width: 100%;
   animation: crtFlicker 0.3s;
   position: relative;
@@ -217,7 +217,7 @@ const CopyrightText = styled.p`
   letter-spacing: 0.05rem;
   background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
   -webkit-background-clip: text;
-      color: #735e44;
+  color: transparent;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(115, 94, 68, 0.3);
   background: rgba(245, 233, 203, 0.3);
   padding: 0.3rem 0.6rem;
@@ -268,8 +268,8 @@ const Footer = () => {
     <FooterContainer>
       <FooterContent>
         <FooterSection>
-          <SectionTitle>About Profit Forge</SectionTitle>
-          <SectionText>
+          <SectionTitle id="about-title">About Profit Forge</SectionTitle>
+          <SectionText aria-labelledby="about-title">
             Profit Forge is a retro-styled platform for creating custom cryptocurrency tokens with
             unique banknote designs. Mint, trade, and showcase your digital assets with nostalgic
             80s-90s aesthetics.
@@ -277,8 +277,8 @@ const Footer = () => {
         </FooterSection>
 
         <FooterSection>
-          <SectionTitle>Features</SectionTitle>
-          <SectionList>
+          <SectionTitle id="features-title">Features</SectionTitle>
+          <SectionList aria-labelledby="features-title">
             <li>Custom token designer with retro templates</li>
             <li>Multi-chain deployment (Solana, Ethereum, Binance)</li>
             <li>IPFS storage for permanent design hosting</li>
@@ -288,8 +288,8 @@ const Footer = () => {
         </FooterSection>
 
         <FooterSection>
-          <SectionTitle>Resources</SectionTitle>
-          <SectionList>
+          <SectionTitle id="resources-title">Resources</SectionTitle>
+          <SectionList aria-labelledby="resources-title">
             <li>Documentation</li>
             <li>API Reference</li>
             <li>Tutorial Videos</li>
@@ -298,8 +298,22 @@ const Footer = () => {
           </SectionList>
         </FooterSection>
 
+        <FooterSection>
+          <SectionTitle id="dev-security-title">Development & Security</SectionTitle>
+          <SectionText aria-labelledby="dev-security-title">
+            Built with passion and precision, Profit Forge ensures your funds are secure through rigorous development and robust security measures.
+          </SectionText>
+          <SectionList aria-labelledby="dev-security-title">
+            <li>Open-source code on GitHub for transparency</li>
+            <li>Smart contracts audited by top-tier firms</li>
+            <li>End-to-end encryption for data and transactions</li>
+            <li>Secure wallet integrations with multi-sig protocols</li>
+            <li>Compliance with ERC-20, SPL, and other standards</li>
+          </SectionList>
+        </FooterSection>
+
         <SocialLinks>
-          <SectionTitle>Connect With Us</SectionTitle>
+          <SectionTitle id="connect-title">Connect With Us</SectionTitle>
           <SocialLinksGroup>
             <SocialLink href="https://github.com" aria-label="GitHub">
               <GitHubIcon />
@@ -317,7 +331,7 @@ const Footer = () => {
               <DescriptionIcon />
             </SocialLink>
           </SocialLinksGroup>
-          <SectionText>
+          <SectionText aria-labelledby="connect-title">
             Join our community of retro crypto enthusiasts and start forging your digital assets today!
           </SectionText>
         </SocialLinks>
