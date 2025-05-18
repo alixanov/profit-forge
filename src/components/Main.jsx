@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import bg from '../assets/bg-crypto.jpg';
+import bg from '../assets/bg-cryptooo.webp';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
 import keyboardSound from '../sound/typing-on-keyboard-335502.mp3';
@@ -268,8 +268,9 @@ const TokenWrapper = styled.div`
 
 const TokenDisplay = styled.div`
   width: 100%;
-  max-width: 48rem;
-  min-height: 28rem;
+  max-width: 46rem;
+  height: ${({ dynamicHeight }) => dynamicHeight || 'auto'};
+  min-height: 20rem;
   background: #f5e9cb;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgYwAAD4BAABvfBgtW3MAAAAASUVORK5CYII=') repeat,
     radial-gradient(circle, rgba(115, 94, 68, 0.1) 1px, transparent 1px);
@@ -286,6 +287,7 @@ const TokenDisplay = styled.div`
   color: #2a2a2a;
   filter: sepia(0.3) blur(0.5px);
   will-change: transform;
+  overflow-y: auto;
 
   &:after {
     content: '';
@@ -300,12 +302,12 @@ const TokenDisplay = styled.div`
 
   @media (max-width: 768px) {
     max-width: 90vw;
-    min-height: 20rem;
+    min-height: 18rem;
     padding: 1rem;
   }
 
   @media (max-width: 480px) {
-    min-height: 18rem;
+    min-height: 16rem;
     padding: 0.75rem;
   }
 `;
@@ -480,7 +482,10 @@ const FormContainer = styled.div`
   align-items: center;
   width: 100%;
   max-width: 28rem;
-
+  background: radial-gradient(circle, rgba(115, 94, 68, 0.2), rgba(0, 0, 0, 0.5));
+  padding: 0.8rem;
+  border: 2px dashed #2a2a2a;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
   @media (max-width: 768px) {
     max-width: 90vw;
   }
@@ -495,7 +500,9 @@ const FormCard = styled.div`
   width: 100%;
   max-width: 28rem;
   min-height: auto;
+
   box-shadow: 0 0 12px rgba(115, 94, 68, 0.15), inset 0 0 6px rgba(0, 0, 0, 0.4);
+
   position: relative;
   filter: sepia(0.3);
   font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
@@ -938,7 +945,9 @@ const Main = () => {
   const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState(null);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [cardHeight, setCardHeight] = useState('auto');
   const tokenDisplayRef = useRef(null);
+  const formCardRef = useRef(null);
   const typingAudioRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const successAudioRef = useRef(new Audio(successSound));
@@ -958,6 +967,33 @@ const Main = () => {
         clearTimeout(typingTimeoutRef.current);
       }
       successAudioRef.current.pause();
+    };
+  }, []);
+
+  // Handle dynamic height matching
+  useEffect(() => {
+    const updateHeight = () => {
+      if (formCardRef.current) {
+        const height = formCardRef.current.offsetHeight;
+        setCardHeight(`${height}px`);
+      }
+    };
+
+    const debounce = (func, wait) => {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+      };
+    };
+
+    const handleResize = debounce(updateHeight, 200);
+
+    updateHeight();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -1085,7 +1121,7 @@ const Main = () => {
       <MainContainer id="main-component">
         <ContentWrapper>
           <TokenWrapper>
-            <TokenDisplay ref={tokenDisplayRef}>
+            <TokenDisplay ref={tokenDisplayRef} dynamicHeight={cardHeight}>
               {isLoading ? (
                 <LoadingText>
                   <Spinner />
@@ -1129,7 +1165,7 @@ const Main = () => {
             )}
           </TokenWrapper>
           <FormContainer>
-            <FormCard>
+            <FormCard ref={formCardRef}>
               <ScanlineOverlay />
               <Title>Profit Forge</Title>
               <FormGroup hasNotification={notification && notification.target === 'platform'}>

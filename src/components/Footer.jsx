@@ -357,14 +357,13 @@ const Footer = () => {
           <CodeBlock role="region" aria-label="Sample JSON data">
             {`{
   "token": {
-    "name": `}
-            <span className="json-string">"RetroCoin"</span>,
-            <span className="json-key">"symbol"</span>: <span className="json-string">"RTC"</span>,
-            <span className="json-key">"chain"</span>: <span className="json-string">"Ethereum"</span>,
-            <span className="json-key">"supply"</span>: <span className="json-number">1000000</span>,
-            <span className="json-key">"creator"</span>: <span className="json-string">"ProfitForge"</span>
+    "name": `}<span className="json-string">"RetroCoin"</span>{`,
+    "symbol": `}<span className="json-string">"RTC"</span>{`,
+    "chain": `}<span className="json-string">"Ethereum"</span>{`,
+    "supply": `}<span className="json-number">1000000</span>{`,
+    "creator": `}<span className="json-string">"ProfitForge"</span>{`
   }
-}
+}`}
           </CodeBlock>
           <SectionText aria-labelledby="api-snapshot-title">
             Sample transaction log from our API.
@@ -372,15 +371,14 @@ const Footer = () => {
           <CodeBlock role="region" aria-label="Sample transaction JSON data">
             {`{
   "transaction": {
-    "txId": `}
-            <span className="json-string">"0x9f8a2b1c"</span>,
-            <span className="json-key">"token"</span>: <span className="json-string">"RetroCoin"</span>,
-            <span className="json-key">"amount"</span>: <span className="json-number">500</span>,
-            <span className="json-key">"from"</span>: <span className="json-string">"0x1234...abcd"</span>,
-            <span className="json-key">"to"</span>: <span className="json-string">"0x5678...efgh"</span>,
-            <span className="json-key">"timestamp"</span>: <span className="json-string">"2025-05-18T12:00:00Z"</span>
+    "txId": `}<span className="json-string">"0x9f8a2b1c"</span>{`,
+    "token": `}<span className="json-string">"RetroCoin"</span>{`,
+    "amount": `}<span className="json-number">500</span>{`,
+    "from": `}<span className="json-string">"0x1234...abcd"</span>{`,
+    "to": `}<span className="json-string">"0x5678...efgh"</span>{`,
+    "timestamp": `}<span className="json-string">"2025-05-18T12:00:00Z"</span>{`
   }
-}
+}`}
           </CodeBlock>
         </FooterSection>
 
