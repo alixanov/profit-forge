@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import bg from '../assets/bg-cryptooo.webp';
+import bg from '../assets/Pump.webp';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
 import keyboardSound from '../sound/typing-on-keyboard-335502.mp3';
