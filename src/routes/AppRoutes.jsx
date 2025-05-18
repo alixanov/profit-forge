@@ -110,7 +110,7 @@ const AppRoutes = () => {
   return (
     <AppWrapper>
       <MainContent role="main">
-        <Routes>
+        <Routes basename={"/"} >
           <Route path="/" element={<Main />} />
           <Route
             path="*"
