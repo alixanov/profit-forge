@@ -13,7 +13,7 @@ const FooterContainer = styled.footer`
   background-size: 4px 4px;
   background-attachment: fixed;
   border-top: 3px solid #2a2a2a;
-  padding: 1.9rem;
+  padding: 1.7rem;
   width: 100%;
   animation: crtFlicker 0.3s;
   position: relative;
@@ -133,6 +133,43 @@ const SectionList = styled.ul`
 
   @media (max-width: 480px) {
     font-size: 0.9rem;
+  }
+`;
+
+// Code Block for JSON
+const CodeBlock = styled.pre`
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  background: #2a2a2a;
+  color: #f5e9cb;
+  padding: 0.75rem;
+  border: 2px solid #735e44;
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  white-space: pre-wrap;
+  text-shadow: 1px 1px 1px rgba(115, 94, 68, 0.1);
+  margin: 0;
+
+  .json-key {
+    color: #f5e9cb;
+  }
+
+  .json-string {
+    color: #d4a017;
+  }
+
+  .json-number {
+    color: #8b5a2b;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    padding: 0.4rem;
   }
 `;
 
@@ -310,6 +347,41 @@ const Footer = () => {
             <li>Secure wallet integrations with multi-sig protocols</li>
             <li>Compliance with ERC-20, SPL, and other standards</li>
           </SectionList>
+        </FooterSection>
+
+        <FooterSection>
+          <SectionTitle id="api-snapshot-title">API Snapshot</SectionTitle>
+          <SectionText aria-labelledby="api-snapshot-title">
+            Sample token metadata from our API.
+          </SectionText>
+          <CodeBlock role="region" aria-label="Sample JSON data">
+            {`{
+  "token": {
+    "name": `}
+            <span className="json-string">"RetroCoin"</span>,
+            <span className="json-key">"symbol"</span>: <span className="json-string">"RTC"</span>,
+            <span className="json-key">"chain"</span>: <span className="json-string">"Ethereum"</span>,
+            <span className="json-key">"supply"</span>: <span className="json-number">1000000</span>,
+            <span className="json-key">"creator"</span>: <span className="json-string">"ProfitForge"</span>
+  }
+}
+          </CodeBlock>
+          <SectionText aria-labelledby="api-snapshot-title">
+            Sample transaction log from our API.
+          </SectionText>
+          <CodeBlock role="region" aria-label="Sample transaction JSON data">
+            {`{
+  "transaction": {
+    "txId": `}
+            <span className="json-string">"0x9f8a2b1c"</span>,
+            <span className="json-key">"token"</span>: <span className="json-string">"RetroCoin"</span>,
+            <span className="json-key">"amount"</span>: <span className="json-number">500</span>,
+            <span className="json-key">"from"</span>: <span className="json-string">"0x1234...abcd"</span>,
+            <span className="json-key">"to"</span>: <span className="json-string">"0x5678...efgh"</span>,
+            <span className="json-key">"timestamp"</span>: <span className="json-string">"2025-05-18T12:00:00Z"</span>
+  }
+}
+          </CodeBlock>
         </FooterSection>
 
         <SocialLinks>
